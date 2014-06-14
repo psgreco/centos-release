@@ -3,7 +3,7 @@
 %define variant_titlecase Server
 %define variant_lowercase server
 %define release_name Final
-%define base_release_version 7
+%define base_release_version 7rc1
 %define full_release_version 7.0
 %define dist_release_version 7
 #define beta Beta
