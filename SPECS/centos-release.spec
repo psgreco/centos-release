@@ -11,7 +11,7 @@
 
 Name:           centos-release
 Version:        %{base_release_version}
-Release:        0%{?dist}.0.140614.2
+Release:        0%{?dist}.0.140617.2
 Summary:        %{product_family} release file
 Group:          System Environment/Base
 License:        GPLv2
@@ -123,6 +123,9 @@ rm -rf %{buildroot}
 %{_prefix}/lib/systemd/system-preset/*
 
 %changelog
+* Tue Jun 17 2014 Karanbir Singh <kbsingh@centos.org> 7.0.el7.0.140617.3
+- rebuild for 2014-06-17 pub qa release
+
 * Sat Jun 14 2014 Karanbir Singh <kbsingh@centos.org> 7.0.el7.0.140614.2
 - prep for public QA release tag as broken
 
