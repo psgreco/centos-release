@@ -2,23 +2,25 @@
 %define product_family CentOs Linux
 %define variant_titlecase Server
 %define variant_lowercase server
-%define release_name Final
-%define base_release_version 7rc1
-%define full_release_version 7.0
+%define release_name Broken
+%define base_release_version 7
+%define full_release_version 7
 %define dist_release_version 7
 #define beta Beta
 %define dist .el%{dist_release_version}
 
 Name:           centos-release
 Version:        %{base_release_version}
-Release:        0%{?dist}.0
+Release:        0%{?dist}.0.140614.2
 Summary:        %{product_family} release file
 Group:          System Environment/Base
 License:        GPLv2
 Provides:       centos-release = %{version}-%{release}
 Provides:       redhat-release = %{version}-%{release}
+Provides:       redhat-release = 7.0
 Provides:       system-release = %{version}-%{release}
-Provides:       system-release(releasever) = %{base_release_version}%{?variant_titlecase}
+Provides:       system-release = 7.0
+Provides:       system-release(releasever) = %{base_release_version}
 Source0:        centos-release-%{base_release_version}.tar.gz
 Source1:        85-display-manager.preset
 Source2:        90-default.preset
@@ -121,5 +123,8 @@ rm -rf %{buildroot}
 %{_prefix}/lib/systemd/system-preset/*
 
 %changelog
+* Sat Jun 14 2014 Karanbir Singh <kbsingh@centos.org> 7.0.el7.0.140614.2
+- prep for public QA release tag as broken
+
 * Fri Jun 13 2014 Karanbir Singh <kbsingh@centos.org> 7-0.el7
 - initial setup for centos-rc
