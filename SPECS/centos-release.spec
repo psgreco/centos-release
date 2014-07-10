@@ -2,24 +2,25 @@
 %define product_family CentOS Linux
 %define variant_titlecase Server
 %define variant_lowercase server
-%define release_name Broken
+%define release_name Core
 %define base_release_version 7
 %define full_release_version 7
 %define dist_release_version 7
+%define upstream_rel 7.0
+%define centos_rel 0.1406
 #define beta Beta
-%define dist .el%{dist_release_version}
+%define dist .el%{dist_release_version}.centos
 
 Name:           centos-release
 Version:        %{base_release_version}
-Release:        0%{?dist}.0.140617.3
+Release:        %{centos_rel}%{?dist}.2.3
 Summary:        %{product_family} release file
 Group:          System Environment/Base
 License:        GPLv2
 Provides:       centos-release = %{version}-%{release}
-Provides:       redhat-release = %{version}-%{release}
-Provides:       redhat-release = 7.0
-Provides:       system-release = %{version}-%{release}
-Provides:       system-release = 7.0
+Provides:       centos-release(upstream) = %{upstream_rel}
+Provides:       redhat-release = %{upstream_rel}
+Provides:       system-release = %{upstream_rel}
 Provides:       system-release(releasever) = %{base_release_version}
 Source0:        centos-release-%{base_release_version}.tar.gz
 Source1:        85-display-manager.preset
@@ -42,17 +43,18 @@ rm -rf %{buildroot}
 mkdir -p %{buildroot}/etc
 
 # create /etc/system-release and /etc/redhat-release
-echo "%{product_family} release %{full_release_version} (%{release_name})" > %{buildroot}/etc/centos-release
+echo "%{product_family} release %{full_release_version}.%{centos_rel} (%{release_name}) " > %{buildroot}/etc/centos-release
+#echo "%{product_family} release %{full_release_version} (Rebuilt from: RHEL %{upstream_rel})" > %{buildroot}/etc/redhat-release
 ln -s centos-release %{buildroot}/etc/system-release
 ln -s centos-release %{buildroot}/etc/redhat-release
+#ln -s centos-release %{buildroot}/etc/redhat-release
 
 # create /etc/os-release
 cat << EOF >>%{buildroot}/etc/os-release
 NAME="%{product_family}"
 VERSION="%{full_release_version} (%{release_name})"
 ID="centos"
-ID_LIKE="rhel"
-ID_LIKE="fedora"
+ID_LIKE="rhel fedora"
 VERSION_ID="%{full_release_version}"
 PRETTY_NAME="%{product_family} %{full_release_version} (%{release_name})"
 ANSI_COLOR="0;31"
@@ -76,26 +78,34 @@ for file in RPM-GPG-KEY* ; do
     install -m 644 $file %{buildroot}/etc/pki/rpm-gpg
 done
 
+# copy yum repos
+mkdir -p -m 755 %{buildroot}/etc/yum.repos.d
+for file in CentOS-*.repo; do 
+    install -m 644 $file %{buildroot}/etc/yum.repos.d
+done
+
 # set up the dist tag macros
 install -d -m 755 %{buildroot}/etc/rpm
 cat >> %{buildroot}/etc/rpm/macros.dist << EOF
 # dist macros.
 
 %%centos_ver %{base_release_version}
+%%centos %{base_release_version}
 %%rhel %{base_release_version}
 %%dist %dist
 %%el%{base_release_version} 1
 EOF
 
 # use unbranded datadir
-mkdir -p -m 755 %{buildroot}/%{_datadir}/redhat-release
-ln -s redhat-release %{buildroot}/%{_datadir}/centos-release
-install -m 644 EULA %{buildroot}/%{_datadir}/redhat-release
+mkdir -p -m 755 %{buildroot}/%{_datadir}/centos-release
+ln -s centos-release %{buildroot}/%{_datadir}/redhat-release
+install -m 644 EULA %{buildroot}/%{_datadir}/centos-release
 
 # use unbranded docdir
-mkdir -p -m 755 %{buildroot}/%{_docdir}/redhat-release
-ln -s redhat-release %{buildroot}/%{_docdir}/centos-release
-install -m 644 GPL %{buildroot}/%{_docdir}/redhat-release
+mkdir -p -m 755 %{buildroot}/%{_docdir}/centos-release
+ln -s centos-release %{buildroot}/%{_docdir}/redhat-release
+install -m 644 GPL %{buildroot}/%{_docdir}/centos-release
+install -m 644 Contributors %{buildroot}/%{_docdir}/centos-release
 
 # copy systemd presets
 mkdir -p %{buildroot}%{_prefix}/lib/systemd/system-preset/
@@ -116,14 +126,30 @@ rm -rf %{buildroot}
 %config(noreplace) /etc/issue
 %config(noreplace) /etc/issue.net
 /etc/pki/rpm-gpg/
+%config(noreplace) /etc/yum.repos.d/*
 /etc/rpm/macros.dist
-%{_docdir}/redhat-release/*
-%{_docdir}/centos-release
-%{_datadir}/redhat-release/*
-%{_datadir}/centos-release
+%{_docdir}/redhat-release
+%{_docdir}/centos-release/*
+%{_datadir}/redhat-release
+%{_datadir}/centos-release/*
 %{_prefix}/lib/systemd/system-preset/*
 
 %changelog
+* Fri Jul 4 2014 Karanbir Singh <kbsingh@centos.org>
+- Roll in the final name change conversation results
+- Stage for release content
+- Add yum repos
+- Add distro keys ( incomplete )
+
+* Mon Jun 30 2014 Karanbir Singh <kbsingh@centos.org>
+- add a macro to macros.dist to indicate just centos as well 
+
+* Tue Jun 24 2014 Karanbir Singh <kbsingh@centos.org> 
+- Trial run for CentOS DateStamp release
+- Add stubs for the yum repos
+- fix os-release to only have one ID_LIKE ( Avij #7171)
+- make the yum repo definitions be config noreplace ( Trevor )
+
 * Tue Jun 17 2014 Karanbir Singh <kbsingh@centos.org> 7.0.el7.0.140617.3
 - rebuild for 2014-06-17 pub qa release
 - ensure we get the right cpe info
