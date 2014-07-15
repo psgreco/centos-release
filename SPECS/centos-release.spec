@@ -13,7 +13,7 @@
 
 Name:           centos-release
 Version:        %{base_release_version}
-Release:        %{centos_rel}%{?dist}.2.3
+Release:        %{centos_rel}%{?dist}.2.4
 Summary:        %{product_family} release file
 Group:          System Environment/Base
 License:        GPLv2
@@ -135,6 +135,9 @@ rm -rf %{buildroot}
 %{_prefix}/lib/systemd/system-preset/*
 
 %changelog
+* Tue Jul 15 2014 Karanbir Singh <kbsingh@centos.org>
+- add CentOS-7 Debug rpm key
+
 * Fri Jul 4 2014 Karanbir Singh <kbsingh@centos.org>
 - Roll in the final name change conversation results
 - Stage for release content
