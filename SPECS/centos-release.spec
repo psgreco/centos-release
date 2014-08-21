@@ -13,7 +13,7 @@
 
 Name:           centos-release
 Version:        %{base_release_version}
-Release:        %{centos_rel}%{?dist}.2.4
+Release:        %{centos_rel}%{?dist}.2.5
 Summary:        %{product_family} release file
 Group:          System Environment/Base
 License:        GPLv2
@@ -25,6 +25,7 @@ Provides:       system-release(releasever) = %{base_release_version}
 Source0:        centos-release-%{base_release_version}.tar.gz
 Source1:        85-display-manager.preset
 Source2:        90-default.preset
+Source3:		yum-vars-infra
 
 
 %description
@@ -84,6 +85,9 @@ for file in CentOS-*.repo; do
     install -m 644 $file %{buildroot}/etc/yum.repos.d
 done
 
+mkdir -p -m 755 %{buildroot}/etc/yum/vars
+install -m 0644 %{SOURCE3} %{buildroot}/etc/yum/vars/
+
 # set up the dist tag macros
 install -d -m 755 %{buildroot}/etc/rpm
 cat >> %{buildroot}/etc/rpm/macros.dist << EOF
@@ -127,6 +131,7 @@ rm -rf %{buildroot}
 %config(noreplace) /etc/issue.net
 /etc/pki/rpm-gpg/
 %config(noreplace) /etc/yum.repos.d/*
+%config(noreplace) /etc/yum/vars/*
 /etc/rpm/macros.dist
 %{_docdir}/redhat-release
 %{_docdir}/centos-release/*
@@ -135,6 +140,12 @@ rm -rf %{buildroot}
 %{_prefix}/lib/systemd/system-preset/*
 
 %changelog
+* Thu Aug 21 2014 Karanbir Singh <kbsingh@centos.org>
+- add a yum var to route mirrorlist accurately
+- add CentOS-fastrack repo
+- Trim the CentOS-Debug-7 key
+- rename the Debug repo to base-debug so yum-utils can consume easier
+
 * Tue Jul 15 2014 Karanbir Singh <kbsingh@centos.org>
 - add CentOS-7 Debug rpm key
 
