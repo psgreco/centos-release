@@ -85,7 +85,7 @@ for file in CentOS-*.repo; do
 done
 
 mkdir -p -m 755 %{buildroot}/etc/yum/vars
-install -m 0644 yum-vars-infra %{buildroot}/etc/yum/vars/
+install -m 0644 yum-vars-infra %{buildroot}/etc/yum/vars/infra
 
 # set up the dist tag macros
 install -d -m 755 %{buildroot}/etc/rpm
