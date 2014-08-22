@@ -25,7 +25,6 @@ Provides:       system-release(releasever) = %{base_release_version}
 Source0:        centos-release-%{base_release_version}.tar.gz
 Source1:        85-display-manager.preset
 Source2:        90-default.preset
-Source3:		yum-vars-infra
 
 
 %description
@@ -86,7 +85,7 @@ for file in CentOS-*.repo; do
 done
 
 mkdir -p -m 755 %{buildroot}/etc/yum/vars
-install -m 0644 %{SOURCE3} %{buildroot}/etc/yum/vars/
+install -m 0644 yum-vars-infra %{buildroot}/etc/yum/vars/
 
 # set up the dist tag macros
 install -d -m 755 %{buildroot}/etc/rpm
