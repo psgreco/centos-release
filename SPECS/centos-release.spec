@@ -13,7 +13,7 @@
 
 Name:           centos-release
 Version:        %{base_release_version}
-Release:        %{centos_rel}%{?dist}.2.5
+Release:        %{centos_rel}%{?dist}.2.6
 Summary:        %{product_family} release file
 Group:          System Environment/Base
 License:        GPLv2
@@ -25,6 +25,7 @@ Provides:       system-release(releasever) = %{base_release_version}
 Source0:        centos-release-%{base_release_version}.tar.gz
 Source1:        85-display-manager.preset
 Source2:        90-default.preset
+Patch1000:	1000-centos-release-cr.patch
 
 
 %description
@@ -32,6 +33,7 @@ Source2:        90-default.preset
 
 %prep
 %setup -q -n centos-release-%{base_release_version}
+%patch1000 -p1
 
 %build
 echo OK
@@ -139,6 +141,9 @@ rm -rf %{buildroot}
 %{_prefix}/lib/systemd/system-preset/*
 
 %changelog
+* Tue Feb 17 2015 Karanbir Singh <kbsingh@centos.org>
+- Include the CR repo for upcoming 7.1 release ( and beyond )
+
 * Thu Aug 21 2014 Karanbir Singh <kbsingh@centos.org>
 - add a yum var to route mirrorlist accurately
 - add CentOS-fastrack repo
