@@ -8,7 +8,7 @@ diff -uNr centos-release-7__orig/CentOS-CR.repo centos-release-7/CentOS-CR.repo
 +# release for a specific CentOS Version ( eg. next release in CentOS-7 ); these rpms
 +# are far less tested, with no integration checking or update path testing having
 +# taken place. They are still built from the upstream sources, but might not map 
-+# to a tangiable stactic upstream release.
++# to an exact upstream distro release.
 +#
 +# These packages are made available soon after they are built, for people willing 
 +# to test their environments, provide feedback on content for the next release, and
@@ -24,8 +24,8 @@ diff -uNr centos-release-7__orig/CentOS-CR.repo centos-release-7/CentOS-CR.repo
 +#       line in the repo config below.
 +#
 +
-+[CR]
-+name=CentOS-$releasever - CR
++[cr]
++name=CentOS-$releasever - cr
 +baseurl=http://mirror.centos.org/centos/$releasever/cr/$basearch/
 +gpgcheck=1
 +gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-7
