@@ -6,8 +6,8 @@
 %define base_release_version 7
 %define full_release_version 7
 %define dist_release_version 7
-%define upstream_rel 7.0
-%define centos_rel 0.1406
+%define upstream_rel 7.1
+%define centos_rel 1.1503
 #define beta Beta
 %define dist .el%{dist_release_version}.centos
 
@@ -22,7 +22,7 @@ Provides:       centos-release(upstream) = %{upstream_rel}
 Provides:       redhat-release = %{upstream_rel}
 Provides:       system-release = %{upstream_rel}
 Provides:       system-release(releasever) = %{base_release_version}
-Source0:        centos-release-%{base_release_version}.tar.gz
+Source0:        centos-release-%{base_release_version}-%{centos_rel}.tar.gz
 Source1:        85-display-manager.preset
 Source2:        90-default.preset
 Patch1000:	1000-centos-release-cr.patch
@@ -46,10 +46,8 @@ mkdir -p %{buildroot}/etc
 
 # create /etc/system-release and /etc/redhat-release
 echo "%{product_family} release %{full_release_version}.%{centos_rel} (%{release_name}) " > %{buildroot}/etc/centos-release
-#echo "%{product_family} release %{full_release_version} (Rebuilt from: RHEL %{upstream_rel})" > %{buildroot}/etc/redhat-release
+echo "Derived from Red Hat Enterprise Linux %{upstream_rel} (Source)" > %{buildroot}/etc/redhat-release
 ln -s centos-release %{buildroot}/etc/system-release
-ln -s centos-release %{buildroot}/etc/redhat-release
-#ln -s centos-release %{buildroot}/etc/redhat-release
 
 # create /etc/os-release
 cat << EOF >>%{buildroot}/etc/os-release
@@ -63,6 +61,11 @@ ANSI_COLOR="0;31"
 CPE_NAME="cpe:/o:centos:centos:7"
 HOME_URL="https://www.centos.org/"
 BUG_REPORT_URL="https://bugs.centos.org/"
+
+CENTOS_MANTISBT_PROJECT="CentOS-7"
+CENTOS_MANTISBT_PROJECT_VERSION="7"
+REDHAT_SUPPORT_PRODUCT="centos"
+REDHAT_SUPPORT_PRODUCT_VERSION="7"
 
 EOF
 # write cpe to /etc/system/release-cpe
@@ -141,6 +144,11 @@ rm -rf %{buildroot}
 %{_prefix}/lib/systemd/system-preset/*
 
 %changelog
+* Thu Mar 19 2015 Karanbir Singh <kbsingh@centos.org>
+- Bump Release for 1503 
+- add ABRT specific content to os-release
+- split redhat-release from centos-release
+
 * Tue Feb 17 2015 Karanbir Singh <kbsingh@centos.org>
 - Include the CR repo for upcoming 7.1 release ( and beyond )
 
