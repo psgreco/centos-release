@@ -13,7 +13,7 @@
 
 Name:           centos-release
 Version:        %{base_release_version}
-Release:        %{centos_rel}%{?dist}.2.6
+Release:        %{centos_rel}%{?dist}.2.7
 Summary:        %{product_family} release file
 Group:          System Environment/Base
 License:        GPLv2
@@ -144,6 +144,9 @@ rm -rf %{buildroot}
 %{_prefix}/lib/systemd/system-preset/*
 
 %changelog
+* Fri Mar 27 2015 Karanbir Singh <kbsingh@centos.org>
+- dont auto enable the initial-setup tui mode
+
 * Thu Mar 19 2015 Karanbir Singh <kbsingh@centos.org>
 - Bump Release for 1503 
 - add ABRT specific content to os-release
