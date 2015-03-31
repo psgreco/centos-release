@@ -130,6 +130,7 @@ rm -rf %{buildroot}
 /etc/redhat-release
 /etc/system-release
 /etc/centos-release
+/etc/centos-release-upstream
 %config(noreplace) /etc/os-release
 %config /etc/system-release-cpe
 %config(noreplace) /etc/issue
