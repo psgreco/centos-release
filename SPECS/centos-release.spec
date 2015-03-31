@@ -13,7 +13,7 @@
 
 Name:           centos-release
 Version:        %{base_release_version}
-Release:        %{centos_rel}%{?dist}.2.7
+Release:        %{centos_rel}%{?dist}.2.8
 Summary:        %{product_family} release file
 Group:          System Environment/Base
 License:        GPLv2
@@ -46,8 +46,9 @@ mkdir -p %{buildroot}/etc
 
 # create /etc/system-release and /etc/redhat-release
 echo "%{product_family} release %{full_release_version}.%{centos_rel} (%{release_name}) " > %{buildroot}/etc/centos-release
-echo "Derived from Red Hat Enterprise Linux %{upstream_rel} (Source)" > %{buildroot}/etc/redhat-release
+echo "Derived from Red Hat Enterprise Linux %{upstream_rel} (Source)" > %{buildroot}/etc/centos-release-upstream
 ln -s centos-release %{buildroot}/etc/system-release
+ln -s centos-release %{buildroot}/etc/redhat-release
 
 # create /etc/os-release
 cat << EOF >>%{buildroot}/etc/os-release
@@ -144,6 +145,10 @@ rm -rf %{buildroot}
 %{_prefix}/lib/systemd/system-preset/*
 
 %changelog
+* Tue Mar 31 2015 Karanbir Singh <kbsingh@centos.org>
+- rework upstream communication
+- re-establish redhat-release as a symlink from centos-release
+
 * Fri Mar 27 2015 Karanbir Singh <kbsingh@centos.org>
 - dont auto enable the initial-setup tui mode
 
