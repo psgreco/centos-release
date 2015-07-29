@@ -2,7 +2,7 @@
 %define product_family CentOS Linux
 %define variant_titlecase Server
 %define variant_lowercase server
-%define release_name Core
+%define release_name AltArch
 %define base_release_version 7
 %define full_release_version 7
 %define dist_release_version 7
@@ -13,7 +13,7 @@
 
 Name:           centos-release
 Version:        %{base_release_version}
-Release:        %{centos_rel}%{?dist}.2.8
+Release:        %{centos_rel}%{?dist}.2.8.altarch
 Summary:        %{product_family} release file
 Group:          System Environment/Base
 License:        GPLv2
@@ -22,18 +22,22 @@ Provides:       centos-release(upstream) = %{upstream_rel}
 Provides:       redhat-release = %{upstream_rel}
 Provides:       system-release = %{upstream_rel}
 Provides:       system-release(releasever) = %{base_release_version}
-Source0:        centos-release-%{base_release_version}-%{centos_rel}.tar.gz
 Source1:        85-display-manager.preset
 Source2:        90-default.preset
-Patch1000:	1000-centos-release-cr.patch
+Source3:	GPL
+Source4:	EULA
 
+# Repository Sources
+Source100:	CentOS-Base.repo
+
+# Repository GPG keys
+Source101:	RPM-GPG-KEY-CentOS-7.%{_arch}
 
 %description
 %{product_family} release files
 
 %prep
-%setup -q -n centos-release-%{base_release_version}
-%patch1000 -p1
+#%setup -q -n centos-release-%{base_release_version}
 
 %build
 echo OK
@@ -62,6 +66,7 @@ ANSI_COLOR="0;31"
 CPE_NAME="cpe:/o:centos:centos:7"
 HOME_URL="https://www.centos.org/"
 BUG_REPORT_URL="https://bugs.centos.org/"
+SIG_FAMILY="AltArch %{_arch}"
 
 CENTOS_MANTISBT_PROJECT="CentOS-7"
 CENTOS_MANTISBT_PROJECT_VERSION="7"
@@ -80,18 +85,12 @@ echo >> %{buildroot}/etc/issue
 
 # copy GPG keys
 mkdir -p -m 755 %{buildroot}/etc/pki/rpm-gpg
-for file in RPM-GPG-KEY* ; do
-    install -m 644 $file %{buildroot}/etc/pki/rpm-gpg
-done
+install -m 644 %{SOURCE101} %{buildroot}/etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-7
 
 # copy yum repos
 mkdir -p -m 755 %{buildroot}/etc/yum.repos.d
-for file in CentOS-*.repo; do 
-    install -m 644 $file %{buildroot}/etc/yum.repos.d
-done
+install -m 644 %{SOURCE100} %{buildroot}/etc/yum.repos.d
 
-mkdir -p -m 755 %{buildroot}/etc/yum/vars
-install -m 0644 yum-vars-infra %{buildroot}/etc/yum/vars/infra
 
 # set up the dist tag macros
 install -d -m 755 %{buildroot}/etc/rpm
@@ -108,13 +107,12 @@ EOF
 # use unbranded datadir
 mkdir -p -m 755 %{buildroot}/%{_datadir}/centos-release
 ln -s centos-release %{buildroot}/%{_datadir}/redhat-release
-install -m 644 EULA %{buildroot}/%{_datadir}/centos-release
+install -m 644 %{SOURCE4} %{buildroot}/%{_datadir}/centos-release
 
 # use unbranded docdir
 mkdir -p -m 755 %{buildroot}/%{_docdir}/centos-release
 ln -s centos-release %{buildroot}/%{_docdir}/redhat-release
-install -m 644 GPL %{buildroot}/%{_docdir}/centos-release
-install -m 644 Contributors %{buildroot}/%{_docdir}/centos-release
+install -m 644 %{SOURCE3} %{buildroot}/%{_docdir}/centos-release
 
 # copy systemd presets
 mkdir -p %{buildroot}%{_prefix}/lib/systemd/system-preset/
@@ -137,7 +135,6 @@ rm -rf %{buildroot}
 %config(noreplace) /etc/issue.net
 /etc/pki/rpm-gpg/
 %config(noreplace) /etc/yum.repos.d/*
-%config(noreplace) /etc/yum/vars/*
 /etc/rpm/macros.dist
 %{_docdir}/redhat-release
 %{_docdir}/centos-release/*
