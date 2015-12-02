@@ -6,14 +6,14 @@
 %define base_release_version 7
 %define full_release_version 7
 %define dist_release_version 7
-%define upstream_rel 7.1
-%define centos_rel 1.1503
+%define upstream_rel 7.2
+%define centos_rel 2.1511
 #define beta Beta
 %define dist .el%{dist_release_version}.centos
 
 Name:           centos-release
 Version:        %{base_release_version}
-Release:        %{centos_rel}%{?dist}.2.8
+Release:        %{centos_rel}%{?dist}.2.9
 Summary:        %{product_family} release file
 Group:          System Environment/Base
 License:        GPLv2
@@ -25,15 +25,12 @@ Provides:       system-release(releasever) = %{base_release_version}
 Source0:        centos-release-%{base_release_version}-%{centos_rel}.tar.gz
 Source1:        85-display-manager.preset
 Source2:        90-default.preset
-Patch1000:	1000-centos-release-cr.patch
-
 
 %description
 %{product_family} release files
 
 %prep
 %setup -q -n centos-release-%{base_release_version}
-%patch1000 -p1
 
 %build
 echo OK
@@ -146,6 +143,11 @@ rm -rf %{buildroot}
 %{_prefix}/lib/systemd/system-preset/*
 
 %changelog
+* Tue Dec  1 2015 Johnny Hughes <johnny@centos.org>
+- Bump Release for 1511
+- Add CentOS-Media.repo and put CentOS-CR.repo in the
+  tarball, then removed patch1000 
+
 * Tue Mar 31 2015 Karanbir Singh <kbsingh@centos.org>
 - rework upstream communication
 - re-establish redhat-release as a symlink from centos-release
