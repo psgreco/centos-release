@@ -6,8 +6,8 @@
 %define base_release_version 7
 %define full_release_version 7
 %define dist_release_version 7
-%define upstream_rel 7.1
-%define centos_rel 1.1503
+%define upstream_rel 7.2
+%define centos_rel 2.1603
 #define beta Beta
 %define dist .el%{dist_release_version}.centos
 
