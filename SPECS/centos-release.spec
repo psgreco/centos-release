@@ -6,14 +6,14 @@
 %define base_release_version 7
 %define full_release_version 7
 %define dist_release_version 7
-%define upstream_rel 7.2
-%define centos_rel 2.1511
+%define upstream_rel 7.3
+%define centos_rel 3.1611
 #define beta Beta
 %define dist .el%{dist_release_version}.centos
 
 Name:           centos-release
 Version:        %{base_release_version}
-Release:        %{centos_rel}%{?dist}.2.9
+Release:        %{centos_rel}%{?dist}
 Summary:        %{product_family} release file
 Group:          System Environment/Base
 License:        GPLv2
@@ -143,6 +143,9 @@ rm -rf %{buildroot}
 %{_prefix}/lib/systemd/system-preset/*
 
 %changelog
+* Tue Nov 29 2016 Johnny Hughes <johnny@centos.org>
+- Bump Release for 1611
+
 * Tue Dec  1 2015 Johnny Hughes <johnny@centos.org>
 - Bump Release for 1511
 - Add CentOS-Media.repo and put CentOS-CR.repo in the
