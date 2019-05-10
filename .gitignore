@@ -1,0 +1,10 @@
+BUILD/
+BUILDROOT/	
+RPMS/	
+SRPMS/
+SOURCES/*.xz
+SOURCES/*.gz
+SOURCES/*.bz2
+SOURCES/*.rpm
+SOURCES/*.orig
+SOURCES/*.sign
