@@ -32,7 +32,7 @@ Name:           centos-userland-release
 Name:           centos-release
 %endif
 Version:        %{base_release_version}
-Release:        %{centos_rel}.0.1%{?dist}
+Release:        %{centos_rel}.0.2%{?dist}
 Summary:        %{product_family} release file
 Group:          System Environment/Base
 License:        GPLv2
