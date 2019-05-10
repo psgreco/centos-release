@@ -22,7 +22,7 @@
 %define upstream_rel 8.0
 %define centos_rel 0.1905
 #define beta Beta
-%define dist .el%{dist_release_version}+2%{?dist_suffix}
+%define dist .el%{dist_release_version}%{?dist_suffix}
 
 %undefine dist_suffix
 
