@@ -2,17 +2,17 @@
 %define product_family CentOS Linux
 %define variant_titlecase Server
 %define variant_lowercase server
-%define targetdir %{_target_cpu}
-%ifarch x86_64
-%define release_name Core
+%ifarch %{ix86}
+%define targetdir x86_64
 %else
-%define release_name AltArch
+%define targetdir %{_target_cpu}
 %endif
-%ifarch aarch64
-%define dist_suffix .a
+%ifarch %{arm}
+%define release_name AltArch
+%else
+%define release_name Core
 %endif
 %ifarch ppc64le
-%define dist_suffix .p
 %define tuned_profile :server
 %endif
 %define base_release_version 8
@@ -22,9 +22,7 @@
 %define upstream_rel 8.0
 %define centos_rel 0.1905
 #define beta Beta
-%define dist .el%{dist_release_version}%{?dist_suffix}
-
-%undefine dist_suffix
+%define dist .el%{dist_release_version}
 
 %ifarch %{arm}
 Name:           centos-userland-release
@@ -32,7 +30,7 @@ Name:           centos-userland-release
 Name:           centos-release
 %endif
 Version:        %{base_release_version}
-Release:        %{centos_rel}.0.2%{?dist}
+Release:        %{centos_rel}.0.3%{?dist}
 Summary:        %{product_family} release file
 Group:          System Environment/Base
 License:        GPLv2
@@ -56,8 +54,6 @@ Source3:        99-default-disable.preset
 
 Source99:       update-boot
 Source100:      rootfs-expand
-
-ExcludeArch:    %{ix86}
 
 %description
 %{product_family} release files
