@@ -24,19 +24,20 @@
 #define beta Beta
 %define dist .el%{dist_release_version}
 
-%ifarch %{arm}
-Name:           centos-userland-release
-%else
 Name:           centos-release
-%endif
 Version:        %{base_release_version}
-Release:        %{centos_rel}.0.3%{?dist}
+Release:        %{centos_rel}.0.4%{?dist}
 Summary:        %{product_family} release file
 Group:          System Environment/Base
 License:        GPLv2
 Requires(post): coreutils, grep
-%ifarch %{arm}
+%ifnarch %{arm}
+%define pkg_name %{name}
+%else
 Requires:       extlinux-bootloader
+%define pkg_name centos-userland-release
+%package -n %{pkg_name}
+Summary:        %{product_family} release file
 %endif
 Provides:       centos-release = %{version}-%{release}
 Provides:       centos-release(upstream) = %{upstream_rel}
@@ -54,6 +55,11 @@ Source3:        99-default-disable.preset
 
 Source99:       update-boot
 Source100:      rootfs-expand
+
+%ifarch %{arm}
+%description -n %{pkg_name}
+%{product_family} release files
+%endif
 
 %description
 %{product_family} release files
@@ -160,7 +166,7 @@ install -m 0755 %{SOURCE99} %{buildroot}%{_bindir}/
 install -m 0755 %{SOURCE100} %{buildroot}%{_bindir}/
 %endif
 
-%posttrans
+%posttrans -n %{pkg_name}
 %ifarch %{arm}
 if [ -e /usr/local/bin/rootfs-expand ];then
 rm -f /usr/local/bin/rootfs-expand
@@ -174,7 +180,7 @@ echo 'centos' > /etc/yum/vars/contentdir
 %clean
 rm -rf %{buildroot}
 
-%files
+%files -n %{pkg_name}
 %defattr(0644,root,root,0755)
 /etc/redhat-release
 /etc/system-release
