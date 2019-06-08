@@ -123,10 +123,10 @@ for file in CentOS-*.repo; do
     install -m 644 $file %{buildroot}/etc/yum.repos.d
 done
 
-mkdir -p -m 755 %{buildroot}/etc/yum/vars
-install -m 0644 yum-vars-infra %{buildroot}/etc/yum/vars/infra
+mkdir -p -m 755 %{buildroot}/etc/dnf/vars
+install -m 0644 yum-vars-infra %{buildroot}/etc/dnf/vars/infra
 %ifarch %{arm}
-echo %{base_release_version} > %{buildroot}/etc/yum/vars/releasever
+echo %{base_release_version} > %{buildroot}/etc/dnf/vars/releasever
 %endif
 popd
 
@@ -171,9 +171,9 @@ install -m 0755 %{SOURCE100} %{buildroot}%{_bindir}/
 if [ -e /usr/local/bin/rootfs-expand ];then
 rm -f /usr/local/bin/rootfs-expand
 fi
-echo 'altarch' >/etc/yum/vars/contentdir
+echo 'altarch' >/etc/dnf/vars/contentdir
 %else
-echo 'centos' > /etc/yum/vars/contentdir
+echo 'centos' > /etc/dnf/vars/contentdir
 %endif
 
 
@@ -192,7 +192,7 @@ rm -rf %{buildroot}
 %config(noreplace) /etc/issue.net
 /etc/pki/rpm-gpg/
 %config(noreplace) /etc/yum.repos.d/*
-%config(noreplace) /etc/yum/vars/*
+%config(noreplace) /etc/dnf/vars/*
 /etc/rpm/macros.dist
 %{_docdir}/redhat-release
 %{_docdir}/centos-release/*
