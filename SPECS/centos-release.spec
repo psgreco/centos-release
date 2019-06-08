@@ -55,9 +55,15 @@ Source0:        centos-release-%{base_release_version}-%{centos_rel}.tar.gz
 Source1:        85-display-manager.preset
 Source2:        90-default.preset
 Source3:        99-default-disable.preset
+Source10:       RPM-GPG-KEY-centosofficial
+Source11:       RPM-GPG-KEY-centostesting
 
 Source99:       update-boot
 Source100:      rootfs-expand
+
+Source200:      EULA
+Source201:      GPL
+Source202:      Contributors
 
 %ifarch %{arm}
 %description -n %{pkg_name}
@@ -116,9 +122,8 @@ echo >> %{buildroot}/etc/issue
 pushd %{targetdir}
 # copy GPG keys
 mkdir -p -m 755 %{buildroot}/etc/pki/rpm-gpg
-for file in RPM-GPG-KEY* ; do
-    install -m 644 $file %{buildroot}/etc/pki/rpm-gpg
-done
+install -m 644 %{SOURCE10} %{buildroot}/etc/pki/rpm-gpg
+install -m 644 %{SOURCE11} %{buildroot}/etc/pki/rpm-gpg
 
 # copy yum repos
 mkdir -p -m 755 %{buildroot}/etc/yum.repos.d
@@ -149,13 +154,13 @@ EOF
 # use unbranded datadir
 mkdir -p -m 755 %{buildroot}/%{_datadir}/centos-release
 ln -s centos-release %{buildroot}/%{_datadir}/redhat-release
-install -m 644 EULA %{buildroot}/%{_datadir}/centos-release
+install -m 644 %{SOURCE200} %{buildroot}/%{_datadir}/centos-release
 
 # use unbranded docdir
 mkdir -p -m 755 %{buildroot}/%{_docdir}/centos-release
 ln -s centos-release %{buildroot}/%{_docdir}/redhat-release
-install -m 644 GPL %{buildroot}/%{_docdir}/centos-release
-install -m 644 Contributors %{buildroot}/%{_docdir}/centos-release
+install -m 644 %{SOURCE201} %{buildroot}/%{_docdir}/centos-release
+install -m 644 %{SOURCE202} %{buildroot}/%{_docdir}/centos-release
 
 # copy systemd presets
 mkdir -p %{buildroot}/%{_prefix}/lib/systemd/system-preset/
