@@ -9,8 +9,10 @@
 %endif
 %ifarch %{arm}
 %define release_name AltArch
+%define contentdir   altarch
 %else
 %define release_name Core
+%define contentdir   centos
 %endif
 %ifarch ppc64le
 %define tuned_profile :server
@@ -126,6 +128,7 @@ done
 
 mkdir -p -m 755 %{buildroot}/etc/dnf/vars
 echo "%{infra_var}" > %{buildroot}/etc/dnf/vars/infra
+echo "%{contentdir}" >%{buildroot}/etc/dnf/vars/contentdir
 %ifarch %{arm}
 echo %{base_release_version} > %{buildroot}/etc/dnf/vars/releasever
 %endif
@@ -165,16 +168,6 @@ install -m 0644 %{SOURCE3} %{buildroot}/%{_prefix}/lib/systemd/system-preset/
 mkdir -p %{buildroot}/%{_bindir}/
 install -m 0755 %{SOURCE99} %{buildroot}%{_bindir}/
 install -m 0755 %{SOURCE100} %{buildroot}%{_bindir}/
-%endif
-
-%posttrans -n %{pkg_name}
-%ifarch %{arm}
-if [ -e /usr/local/bin/rootfs-expand ];then
-rm -f /usr/local/bin/rootfs-expand
-fi
-echo 'altarch' >/etc/dnf/vars/contentdir
-%else
-echo 'centos' > /etc/dnf/vars/contentdir
 %endif
 
 
