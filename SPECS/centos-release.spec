@@ -15,6 +15,7 @@
 %ifarch ppc64le
 %define tuned_profile :server
 %endif
+%define infra_var stock
 %define base_release_version 8
 %define full_release_version 8
 %define dist_release_version 8
@@ -124,7 +125,7 @@ for file in CentOS-*.repo; do
 done
 
 mkdir -p -m 755 %{buildroot}/etc/dnf/vars
-install -m 0644 yum-vars-infra %{buildroot}/etc/dnf/vars/infra
+echo "%{infra_var}" > %{buildroot}/etc/dnf/vars/infra
 %ifarch %{arm}
 echo %{base_release_version} > %{buildroot}/etc/dnf/vars/releasever
 %endif
