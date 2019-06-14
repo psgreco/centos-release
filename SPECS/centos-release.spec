@@ -27,6 +27,9 @@
 #define beta Beta
 %define dist .el%{dist_release_version}
 
+# The anaconda scripts in %{_libexecdir} can create false requirements
+%global __requires_exclude_from %{_libexecdir}
+
 Name:           centos-release
 Version:        %{base_release_version}
 Release:        %{centos_rel}.0.4%{?dist}
@@ -73,6 +76,9 @@ Source304:      CentOS-fasttrack.repo
 Source305:      CentOS-Media.repo
 Source306:      CentOS-Sources.repo
 Source307:      CentOS-Vault.repo
+
+Source400:      anaconda-make-service-repos.sh
+Source401:      anaconda-repos.sh
 
 %ifarch %{arm}
 %description -n %{pkg_name}
@@ -182,6 +188,10 @@ install -m 0644 %{SOURCE1} %{buildroot}/%{_prefix}/lib/systemd/system-preset/
 install -m 0644 %{SOURCE2} %{buildroot}/%{_prefix}/lib/systemd/system-preset/
 install -m 0644 %{SOURCE3} %{buildroot}/%{_prefix}/lib/systemd/system-preset/
 
+# Drop in scripts for anaconda repos
+install -m 0750 %{SOURCE400} %{buildroot}/%{_libexecdir}/%{name}/anaconda-make-service-repos.sh
+install -m 0750 %{SOURCE401} %{buildroot}/%{_libexecdir}/%{name}/anaconda-repos.sh
+
 %ifarch %{arm}
 # Install armhfp specific tools
 mkdir -p %{buildroot}/%{_bindir}/
@@ -192,6 +202,8 @@ install -m 0755 %{SOURCE100} %{buildroot}%{_bindir}/
 
 %clean
 rm -rf %{buildroot}
+
+%triggerin -p %{_libexecdir}/%{name}/anaconda-make-services.sh -- anaconda
 
 %files -n %{pkg_name}
 %defattr(0644,root,root,0755)
