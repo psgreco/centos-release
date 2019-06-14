@@ -68,10 +68,11 @@ Source202:      Contributors
 Source300:      CentOS-Base.repo
 Source301:      CentOS-CR.repo
 Source302:      CentOS-Debuginfo.repo
-Source303:      CentOS-fasttrack.repo
-Source304:      CentOS-Media.repo
-Source305:      CentOS-Sources.repo
-Source306:      CentOS-Vault.repo
+Source303:      CentOS-Extras.repo
+Source304:      CentOS-fasttrack.repo
+Source305:      CentOS-Media.repo
+Source306:      CentOS-Sources.repo
+Source307:      CentOS-Vault.repo
 
 %ifarch %{arm}
 %description -n %{pkg_name}
@@ -142,6 +143,7 @@ install -m 644 %{SOURCE303} %{buildroot}/etc/yum.repos.d
 install -m 644 %{SOURCE304} %{buildroot}/etc/yum.repos.d
 install -m 644 %{SOURCE305} %{buildroot}/etc/yum.repos.d
 install -m 644 %{SOURCE306} %{buildroot}/etc/yum.repos.d
+install -m 644 %{SOURCE307} %{buildroot}/etc/yum.repos.d
 
 mkdir -p -m 755 %{buildroot}/etc/dnf/vars
 echo "%{infra_var}" > %{buildroot}/etc/dnf/vars/infra
