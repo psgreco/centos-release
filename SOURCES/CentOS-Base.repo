@@ -10,7 +10,7 @@
 #
 #
 
-[base]
+[BaseOS]
 name=CentOS-$releasever - Base
 mirrorlist=http://mirrorlist.centos.org/?release=$releasever&arch=$basearch&repo=os&infra=$infra
 #baseurl=http://mirror.centos.org/$contentdir/$releasever/os/$basearch/
