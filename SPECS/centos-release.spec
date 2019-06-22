@@ -2,11 +2,6 @@
 %define product_family CentOS Linux
 %define variant_titlecase Server
 %define variant_lowercase server
-%ifarch %{ix86}
-%define targetdir x86_64
-%else
-%define targetdir %{_target_cpu}
-%endif
 %ifarch %{arm}
 %define release_name AltArch
 %define contentdir   altarch
@@ -54,7 +49,6 @@ Provides:       system-release(releasever) = %{base_release_version}
 Provides:       centos-release-eula
 Provides:       redhat-release-eula
 
-Source0:        centos-release-%{base_release_version}-%{centos_rel}.tar.gz
 Source1:        85-display-manager.preset
 Source2:        90-default.preset
 Source3:        99-default-disable.preset
@@ -86,7 +80,7 @@ Source307:      CentOS-Vault.repo
 %{product_family} release files
 
 %prep
-%setup -q -n centos-release-%{base_release_version}
+echo OK
 
 %build
 echo OK
@@ -131,7 +125,6 @@ echo 'Kernel \r on an \m' >> %{buildroot}/etc/issue
 cp %{buildroot}/etc/issue %{buildroot}/etc/issue.net
 echo >> %{buildroot}/etc/issue
 
-pushd %{targetdir}
 # copy GPG keys
 mkdir -p -m 755 %{buildroot}/etc/pki/rpm-gpg
 install -m 644 %{SOURCE10} %{buildroot}/etc/pki/rpm-gpg
@@ -154,7 +147,6 @@ echo "%{contentdir}" >%{buildroot}/etc/dnf/vars/contentdir
 %ifarch %{arm}
 echo %{base_release_version} > %{buildroot}/etc/dnf/vars/releasever
 %endif
-popd
 
 # set up the dist tag macros
 install -d -m 755 %{buildroot}/etc/rpm
