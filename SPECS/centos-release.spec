@@ -27,7 +27,7 @@
 
 Name:           centos-release
 Version:        %{upstream_rel}
-Release:        %{centos_rel}.0.4%{?dist}
+Release:        %{centos_rel}.0.5%{?dist}
 Summary:        %{product_family} release file
 Group:          System Environment/Base
 License:        GPLv2
@@ -103,6 +103,7 @@ VERSION="%{full_release_version} (%{release_name})"
 ID="centos"
 ID_LIKE="rhel fedora"
 VERSION_ID="%{full_release_version}"
+PLATFORM_ID="platform:el%{full_release_version}"
 PRETTY_NAME="%{product_family} %{full_release_version} (%{release_name})"
 ANSI_COLOR="0;31"
 CPE_NAME="cpe:/o:centos:centos:%{base_release_version}%{?tuned_profile}"
