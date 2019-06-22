@@ -26,7 +26,7 @@
 %global __requires_exclude_from %{_libexecdir}
 
 Name:           centos-release
-Version:        %{base_release_version}
+Version:        %{upstream_rel}
 Release:        %{centos_rel}.0.4%{?dist}
 Summary:        %{product_family} release file
 Group:          System Environment/Base
