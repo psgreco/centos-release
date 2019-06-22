@@ -2,19 +2,17 @@
 %define product_family CentOS Linux
 %define variant_titlecase Server
 %define variant_lowercase server
-%ifarch %{ix86}
-%define targetdir x86_64
-%else
-%define targetdir %{_target_cpu}
-%endif
 %ifarch %{arm}
 %define release_name AltArch
+%define contentdir   altarch
 %else
 %define release_name Core
+%define contentdir   centos
 %endif
 %ifarch ppc64le
 %define tuned_profile :server
 %endif
+%define infra_var stock
 %define base_release_version 8
 %define full_release_version 8
 %define dist_release_version 8
@@ -24,13 +22,15 @@
 #define beta Beta
 %define dist .el%{dist_release_version}
 
+# The anaconda scripts in %{_libexecdir} can create false requirements
+%global __requires_exclude_from %{_libexecdir}
+
 Name:           centos-release
-Version:        %{base_release_version}
+Version:        %{upstream_rel}
 Release:        %{centos_rel}.0.4%{?dist}
 Summary:        %{product_family} release file
 Group:          System Environment/Base
 License:        GPLv2
-Requires(post): coreutils, grep
 %ifnarch %{arm}
 %define pkg_name %{name}
 %else
@@ -48,13 +48,27 @@ Provides:       system-release(releasever) = %{base_release_version}
 Provides:       centos-release-eula
 Provides:       redhat-release-eula
 
-Source0:        centos-release-%{base_release_version}-%{centos_rel}.tar.gz
 Source1:        85-display-manager.preset
 Source2:        90-default.preset
 Source3:        99-default-disable.preset
+Source10:       RPM-GPG-KEY-centosofficial
+Source11:       RPM-GPG-KEY-centostesting
 
 Source99:       update-boot
 Source100:      rootfs-expand
+
+Source200:      EULA
+Source201:      GPL
+Source202:      Contributors
+
+Source300:      CentOS-Base.repo
+Source301:      CentOS-CR.repo
+Source302:      CentOS-Debuginfo.repo
+Source303:      CentOS-Extras.repo
+Source304:      CentOS-fasttrack.repo
+Source305:      CentOS-Media.repo
+Source306:      CentOS-Sources.repo
+Source307:      CentOS-Vault.repo
 
 %ifarch %{arm}
 %description -n %{pkg_name}
@@ -65,7 +79,7 @@ Source100:      rootfs-expand
 %{product_family} release files
 
 %prep
-%setup -q -n centos-release-%{base_release_version}
+echo OK
 
 %build
 echo OK
@@ -91,18 +105,18 @@ ID_LIKE="rhel fedora"
 VERSION_ID="%{full_release_version}"
 PRETTY_NAME="%{product_family} %{full_release_version} (%{release_name})"
 ANSI_COLOR="0;31"
-CPE_NAME="cpe:/o:centos:centos:8%{?tuned_profile}"
+CPE_NAME="cpe:/o:centos:centos:%{base_release_version}%{?tuned_profile}"
 HOME_URL="https://www.centos.org/"
 BUG_REPORT_URL="https://bugs.centos.org/"
 
-CENTOS_MANTISBT_PROJECT="CentOS-8"
-CENTOS_MANTISBT_PROJECT_VERSION="8"
+CENTOS_MANTISBT_PROJECT="CentOS-%{base_release_version}"
+CENTOS_MANTISBT_PROJECT_VERSION="%{base_release_version}"
 REDHAT_SUPPORT_PRODUCT="centos"
-REDHAT_SUPPORT_PRODUCT_VERSION="8"
+REDHAT_SUPPORT_PRODUCT_VERSION="%{base_release_version}"
 
 EOF
 # write cpe to /etc/system/release-cpe
-echo "cpe:/o:centos:centos:8" > %{buildroot}/etc/system-release-cpe
+echo "cpe:/o:centos:centos:%{base_release_version}" > %{buildroot}/etc/system-release-cpe
 
 # create /etc/issue and /etc/issue.net
 echo '\S' > %{buildroot}/etc/issue
@@ -110,25 +124,28 @@ echo 'Kernel \r on an \m' >> %{buildroot}/etc/issue
 cp %{buildroot}/etc/issue %{buildroot}/etc/issue.net
 echo >> %{buildroot}/etc/issue
 
-pushd %{targetdir}
 # copy GPG keys
 mkdir -p -m 755 %{buildroot}/etc/pki/rpm-gpg
-for file in RPM-GPG-KEY* ; do
-    install -m 644 $file %{buildroot}/etc/pki/rpm-gpg
-done
+install -m 644 %{SOURCE10} %{buildroot}/etc/pki/rpm-gpg
+install -m 644 %{SOURCE11} %{buildroot}/etc/pki/rpm-gpg
 
 # copy yum repos
 mkdir -p -m 755 %{buildroot}/etc/yum.repos.d
-for file in CentOS-*.repo; do 
-    install -m 644 $file %{buildroot}/etc/yum.repos.d
-done
+install -m 644 %{SOURCE300} %{buildroot}/etc/yum.repos.d
+install -m 644 %{SOURCE301} %{buildroot}/etc/yum.repos.d
+install -m 644 %{SOURCE302} %{buildroot}/etc/yum.repos.d
+install -m 644 %{SOURCE303} %{buildroot}/etc/yum.repos.d
+install -m 644 %{SOURCE304} %{buildroot}/etc/yum.repos.d
+install -m 644 %{SOURCE305} %{buildroot}/etc/yum.repos.d
+install -m 644 %{SOURCE306} %{buildroot}/etc/yum.repos.d
+install -m 644 %{SOURCE307} %{buildroot}/etc/yum.repos.d
 
-mkdir -p -m 755 %{buildroot}/etc/yum/vars
-install -m 0644 yum-vars-infra %{buildroot}/etc/yum/vars/infra
+mkdir -p -m 755 %{buildroot}/etc/dnf/vars
+echo "%{infra_var}" > %{buildroot}/etc/dnf/vars/infra
+echo "%{contentdir}" >%{buildroot}/etc/dnf/vars/contentdir
 %ifarch %{arm}
-install -m 0644 yum-vars-releasever %{buildroot}/etc/yum/vars/releasever
+echo %{base_release_version} > %{buildroot}/etc/dnf/vars/releasever
 %endif
-popd
 
 # set up the dist tag macros
 install -d -m 755 %{buildroot}/etc/rpm
@@ -138,20 +155,20 @@ cat >> %{buildroot}/etc/rpm/macros.dist << EOF
 %%centos_ver %{base_release_version}
 %%centos %{base_release_version}
 %%rhel %{base_release_version}
-%%dist .el8
+%%dist .el%{base_release_version}
 %%el%{base_release_version} 1
 EOF
 
 # use unbranded datadir
 mkdir -p -m 755 %{buildroot}/%{_datadir}/centos-release
 ln -s centos-release %{buildroot}/%{_datadir}/redhat-release
-install -m 644 EULA %{buildroot}/%{_datadir}/centos-release
+install -m 644 %{SOURCE200} %{buildroot}/%{_datadir}/centos-release
 
 # use unbranded docdir
 mkdir -p -m 755 %{buildroot}/%{_docdir}/centos-release
 ln -s centos-release %{buildroot}/%{_docdir}/redhat-release
-install -m 644 GPL %{buildroot}/%{_docdir}/centos-release
-install -m 644 Contributors %{buildroot}/%{_docdir}/centos-release
+install -m 644 %{SOURCE201} %{buildroot}/%{_docdir}/centos-release
+install -m 644 %{SOURCE202} %{buildroot}/%{_docdir}/centos-release
 
 # copy systemd presets
 mkdir -p %{buildroot}/%{_prefix}/lib/systemd/system-preset/
@@ -164,16 +181,6 @@ install -m 0644 %{SOURCE3} %{buildroot}/%{_prefix}/lib/systemd/system-preset/
 mkdir -p %{buildroot}/%{_bindir}/
 install -m 0755 %{SOURCE99} %{buildroot}%{_bindir}/
 install -m 0755 %{SOURCE100} %{buildroot}%{_bindir}/
-%endif
-
-%posttrans -n %{pkg_name}
-%ifarch %{arm}
-if [ -e /usr/local/bin/rootfs-expand ];then
-rm -f /usr/local/bin/rootfs-expand
-fi
-echo 'altarch' >/etc/yum/vars/contentdir
-%else
-echo 'centos' > /etc/yum/vars/contentdir
 %endif
 
 
@@ -192,7 +199,7 @@ rm -rf %{buildroot}
 %config(noreplace) /etc/issue.net
 /etc/pki/rpm-gpg/
 %config(noreplace) /etc/yum.repos.d/*
-%config(noreplace) /etc/yum/vars/*
+%config(noreplace) /etc/dnf/vars/*
 /etc/rpm/macros.dist
 %{_docdir}/redhat-release
 %{_docdir}/centos-release/*
