@@ -31,7 +31,6 @@ Release:        %{centos_rel}.0.4%{?dist}
 Summary:        %{product_family} release file
 Group:          System Environment/Base
 License:        GPLv2
-Requires(post): coreutils, grep
 %ifnarch %{arm}
 %define pkg_name %{name}
 %else
