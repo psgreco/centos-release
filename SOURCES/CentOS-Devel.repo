@@ -1,4 +1,4 @@
-# CentOS-Base.repo
+# CentOS-Devel.repo
 #
 # The mirror system uses the connecting IP address of the client and the
 # update status of each mirror to pick mirrors that are updated to and
@@ -10,11 +10,11 @@
 #
 #
 
-[BaseOS]
-name=CentOS-$releasever - Base
-mirrorlist=http://mirrorlist.centos.org/?release=$releasever&arch=$basearch&repo=BaseOS&infra=$infra
-#baseurl=http://mirror.centos.org/$contentdir/$releasever/BaseOS/$basearch/os/
+[Devel]
+name=CentOS-$releasever - Devel
+mirrorlist=http://mirrorlist.centos.org/?release=$releasever&arch=$basearch&repo=Devel&infra=$infra
+#baseurl=http://mirror.centos.org/$contentdir/$releasever/Devel/$basearch/os/
 gpgcheck=1
-enabled=1
+enabled=0
 gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-centosofficial
 

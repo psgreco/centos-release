@@ -27,7 +27,7 @@
 
 Name:           centos-release
 Version:        %{upstream_rel}
-Release:        %{centos_rel}.0.5%{?dist}
+Release:        %{centos_rel}.0.6%{?dist}
 Summary:        %{product_family} release file
 Group:          System Environment/Base
 License:        GPLv2
@@ -69,6 +69,9 @@ Source304:      CentOS-fasttrack.repo
 Source305:      CentOS-Media.repo
 Source306:      CentOS-Sources.repo
 Source307:      CentOS-Vault.repo
+Source308:      CentOS-AppStream.repo
+Source309:      CentOS-Devel.repo
+Source310:      CentOS-centosplus.repo
 
 %ifarch %{arm}
 %description -n %{pkg_name}
@@ -140,6 +143,9 @@ install -m 644 %{SOURCE304} %{buildroot}/etc/yum.repos.d
 install -m 644 %{SOURCE305} %{buildroot}/etc/yum.repos.d
 install -m 644 %{SOURCE306} %{buildroot}/etc/yum.repos.d
 install -m 644 %{SOURCE307} %{buildroot}/etc/yum.repos.d
+install -m 644 %{SOURCE308} %{buildroot}/etc/yum.repos.d
+install -m 644 %{SOURCE309} %{buildroot}/etc/yum.repos.d
+install -m 644 %{SOURCE310} %{buildroot}/etc/yum.repos.d
 
 mkdir -p -m 755 %{buildroot}/etc/dnf/vars
 echo "%{infra_var}" > %{buildroot}/etc/dnf/vars/infra
