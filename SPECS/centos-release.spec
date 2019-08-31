@@ -91,18 +91,18 @@ ID_LIKE="rhel fedora"
 VERSION_ID="%{full_release_version}"
 PRETTY_NAME="%{product_family} %{full_release_version} (%{release_name})"
 ANSI_COLOR="0;31"
-CPE_NAME="cpe:/o:centos:centos:7%{?tuned_profile}"
+CPE_NAME="cpe:/o:centos:centos:%{base_release_version}%{?tuned_profile}"
 HOME_URL="https://www.centos.org/"
 BUG_REPORT_URL="https://bugs.centos.org/"
 
-CENTOS_MANTISBT_PROJECT="CentOS-7"
-CENTOS_MANTISBT_PROJECT_VERSION="7"
+CENTOS_MANTISBT_PROJECT="CentOS-%{base_release_version}"
+CENTOS_MANTISBT_PROJECT_VERSION="%{base_release_version}"
 REDHAT_SUPPORT_PRODUCT="centos"
-REDHAT_SUPPORT_PRODUCT_VERSION="7"
+REDHAT_SUPPORT_PRODUCT_VERSION="%{base_release_version}"
 
 EOF
 # write cpe to /etc/system/release-cpe
-echo "cpe:/o:centos:centos:7" > %{buildroot}/etc/system-release-cpe
+echo "cpe:/o:centos:centos:%{base_release_version}" > %{buildroot}/etc/system-release-cpe
 
 # create /etc/issue and /etc/issue.net
 echo '\S' > %{buildroot}/etc/issue
@@ -139,7 +139,7 @@ cat >> %{buildroot}/etc/rpm/macros.dist << EOF
 %%centos_ver %{base_release_version}
 %%centos %{base_release_version}
 %%rhel %{base_release_version}
-%%dist .el7
+%%dist .el%{base_release_version}
 %%el%{base_release_version} 1
 EOF
 
