@@ -5,8 +5,10 @@
 %define targetdir %{_target_cpu}
 %ifarch x86_64
 %define release_name Core
+%define contentdir   centos
 %else
 %define release_name AltArch
+%define contentdir   altarch
 %endif
 %ifarch aarch64
 %define dist_suffix .a
@@ -24,6 +26,7 @@
 %ifarch %{ix86}
 %define dist_suffix .i
 %endif
+%define infra_var stock
 %define base_release_version 7
 %define full_release_version 7
 %define dist_release_version 7
@@ -121,9 +124,10 @@ for file in CentOS-*.repo; do
 done
 
 mkdir -p -m 755 %{buildroot}/etc/yum/vars
-install -m 0644 yum-vars-infra %{buildroot}/etc/yum/vars/infra
+echo "%{infra_var}" > %{buildroot}/etc/yum/vars/infra
+echo "%{contentdir}" >%{buildroot}/etc/yum/vars/contentdir
 %ifarch %{arm}
-install -m 0644 yum-vars-releasever %{buildroot}/etc/yum/vars/releasever
+echo %{base_release_version} > %{buildroot}/etc/yum/vars/releasever
 %endif
 popd
 
@@ -168,9 +172,6 @@ if [ -e /usr/local/bin/rootfs-expand ];then
 rm -f /usr/local/bin/rootfs-expand
 fi
 %endif
-
-/usr/bin/uname -m | grep -q 'x86_64'  && echo 'centos' >/etc/yum/vars/contentdir || echo 'altarch' > /etc/yum/vars/contentdir
-
 
 %clean
 rm -rf %{buildroot}
