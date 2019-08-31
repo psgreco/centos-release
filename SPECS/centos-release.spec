@@ -46,8 +46,8 @@ Release:        %{centos_rel}.2%{?dist}
 Summary:        %{product_family} release file
 Group:          System Environment/Base
 License:        GPLv2
-Requires(post): coreutils, grep
 %ifarch %{arm}
+Requires(post): coreutils
 Requires:       extlinux-bootloader
 %endif
 Provides:       centos-release = %{version}-%{release}
@@ -166,8 +166,8 @@ install -m 0755 %{SOURCE99} %{buildroot}%{_bindir}/
 install -m 0755 %{SOURCE100} %{buildroot}%{_bindir}/
 %endif
 
-%posttrans
 %ifarch %{arm}
+%posttrans
 if [ -e /usr/local/bin/rootfs-expand ];then
 rm -f /usr/local/bin/rootfs-expand
 fi
