@@ -10,22 +10,17 @@
 %define release_name AltArch
 %define contentdir   altarch
 %endif
-%ifarch aarch64
-%define dist_suffix .a
-%endif
+
 %ifarch ppc ppc64 ppc64le
-%define dist_suffix .p
 %define tuned_profile :server
 %endif
 %ifarch ppc64le
 %if "%{dist}" == ".el7a"
-%define dist_suffix .p9
+%define altarch_suffix a
 %define targetdir power9
 %endif
 %endif
-%ifarch %{ix86}
-%define dist_suffix .i
-%endif
+
 %define infra_var stock
 %define base_release_version 7
 %define full_release_version 7
@@ -34,7 +29,7 @@
 %define upstream_rel 7.6
 %define centos_rel 6.1810
 #define beta Beta
-%define dist .el%{dist_release_version}.centos%{?dist_suffix}
+%define dist .el%{dist_release_version}%{?altarch_suffix}.centos
 
 %ifarch %{arm}
 Name:           centos-userland-release
