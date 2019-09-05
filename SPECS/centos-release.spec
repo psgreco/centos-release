@@ -25,9 +25,9 @@
 %define base_release_version 7
 %define full_release_version 7
 %define dist_release_version 7
-%define upstream_rel_long 7.6-1
-%define upstream_rel 7.6
-%define centos_rel 6.1810
+%define upstream_rel_long 7.7-10
+%define upstream_rel 7.7
+%define centos_rel 7.1908
 #define beta Beta
 %define dist .el%{dist_release_version}%{?altarch_suffix}.centos
 
@@ -37,7 +37,7 @@ Name:           centos-userland-release
 Name:           centos-release
 %endif
 Version:        %{base_release_version}
-Release:        %{centos_rel}.2%{?dist}
+Release:        %{centos_rel}.0%{?dist}
 Summary:        %{product_family} release file
 Group:          System Environment/Base
 License:        GPLv2
@@ -196,6 +196,15 @@ rm -rf %{buildroot}
 %endif
 
 %changelog
+* Mon Sep  2 2019 Pablo Greco <pgreco@centosproject.org>
+- Own yum vars
+- Generate yum vars at build time
+- Remove dist_suffix
+- Fix autorelabel preset
+- Fix tuned profile in system-release-cpe
+- Set aarch64 tuned profile to server
+- Update to 7.7
+
 * Fri Nov 23 2018 Pablo Greco <pablo@fliagreco.com.ar>
 - Update to 7.6
 - Fix vault repos
