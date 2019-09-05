@@ -125,7 +125,7 @@ enable rhsmcertd.service
 
 # https://bugzilla.redhat.com/show_bug.cgi?id=1493545
 enable rhel-autorelabel.service
-enable rhel-autorelable-mark.service
+enable rhel-autorelabel-mark.service
 enable rhel-configure.service
 enable rhel-dmesg.service
 enable rhel-import-state.service

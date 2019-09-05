@@ -72,7 +72,7 @@ rm -rf %{buildroot}
 mkdir -p %{buildroot}/etc
 
 # create /etc/system-release and /etc/redhat-release
-echo "%{product_family} release %{full_release_version}.%{centos_rel} (%{release_name}) " > %{buildroot}/etc/centos-release
+echo "%{product_family} release %{full_release_version}.%{centos_rel} (%{release_name})" > %{buildroot}/etc/centos-release
 echo "Derived from Red Hat Enterprise Linux %{upstream_rel} (Source)" > %{buildroot}/etc/centos-release-upstream
 ln -s centos-release %{buildroot}/etc/system-release
 ln -s centos-release %{buildroot}/etc/redhat-release
