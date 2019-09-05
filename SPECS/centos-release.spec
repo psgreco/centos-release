@@ -11,7 +11,7 @@
 %define contentdir   altarch
 %endif
 
-%ifarch ppc ppc64 ppc64le
+%ifarch aarch64 ppc ppc64 ppc64le
 %define tuned_profile :server
 %endif
 %ifarch ppc64le
@@ -97,7 +97,7 @@ REDHAT_SUPPORT_PRODUCT_VERSION="%{base_release_version}"
 
 EOF
 # write cpe to /etc/system/release-cpe
-echo "cpe:/o:centos:centos:%{base_release_version}" > %{buildroot}/etc/system-release-cpe
+echo "cpe:/o:centos:centos:%{base_release_version}%{?tuned_profile}" > %{buildroot}/etc/system-release-cpe
 
 # create /etc/issue and /etc/issue.net
 echo '\S' > %{buildroot}/etc/issue
