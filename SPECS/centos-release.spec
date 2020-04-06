@@ -68,8 +68,9 @@ echo OK
 %install
 rm -rf %{buildroot}
 
-# create /etc
+# create skeleton
 mkdir -p %{buildroot}/etc
+mkdir -p %{buildroot}%{_prefix}/lib
 
 # create /etc/system-release and /etc/redhat-release
 echo "%{product_family} release %{full_release_version}.%{centos_rel} (%{release_name})" > %{buildroot}/etc/centos-release
@@ -77,8 +78,8 @@ echo "Derived from Red Hat Enterprise Linux %{upstream_rel} (Source)" > %{buildr
 ln -s centos-release %{buildroot}/etc/system-release
 ln -s centos-release %{buildroot}/etc/redhat-release
 
-# create /etc/os-release
-cat << EOF >>%{buildroot}/etc/os-release
+# Create the os-release file
+cat << EOF >>%{buildroot}%{_prefix}/lib/os-release
 NAME="%{product_family}"
 VERSION="%{full_release_version} (%{release_name})"
 ID="centos"
@@ -96,6 +97,9 @@ REDHAT_SUPPORT_PRODUCT="centos"
 REDHAT_SUPPORT_PRODUCT_VERSION="%{base_release_version}"
 
 EOF
+# Create the symlink for /etc/os-release
+ln -s ../usr/lib/os-release %{buildroot}%{_sysconfdir}/os-release
+
 # write cpe to /etc/system/release-cpe
 echo "cpe:/o:centos:centos:%{base_release_version}%{?tuned_profile}" > %{buildroot}/etc/system-release-cpe
 
@@ -191,6 +195,7 @@ rm -rf %{buildroot}
 %{_docdir}/centos-release/*
 %{_datadir}/redhat-release
 %{_datadir}/centos-release/*
+%{_prefix}/lib/os-release
 %{_prefix}/lib/systemd/system-preset/*
 %ifarch %{arm} aarch64
 %ifarch %{arm}
@@ -202,6 +207,7 @@ rm -rf %{buildroot}
 %changelog
 * Mon Apr  6 2020 Pablo Greco <pgreco@centosproject.org>
 - Add rootfs-expand to aarch64
+- Backport move of /etc/os-release to /usr/lib/os-release (ngompa)
 
 * Mon Sep  2 2019 Pablo Greco <pgreco@centosproject.org>
 - Own yum vars
