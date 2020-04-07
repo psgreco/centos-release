@@ -160,13 +160,12 @@ mkdir -p %{buildroot}%{_prefix}/lib/systemd/system-preset/
 install -m 0644 %{SOURCE1} %{buildroot}%{_prefix}/lib/systemd/system-preset/
 install -m 0644 %{SOURCE2} %{buildroot}%{_prefix}/lib/systemd/system-preset/
 
-%ifarch %{arm} aarch64
 # Install armhfp/aarch64 specific tools
-mkdir -p %{buildroot}/%{_bindir}/
 %ifarch %{arm}
-install -m 0755 %{SOURCE99} %{buildroot}%{_bindir}/
+install -D -m 0755 %{SOURCE99} %{buildroot}%{_bindir}/update-boot
 %endif
-install -m 0755 %{SOURCE100} %{buildroot}%{_bindir}/
+%ifarch %{arm} aarch64
+install -D -m 0755 %{SOURCE100} %{buildroot}%{_bindir}/rootfs-expand
 %endif
 
 %ifarch %{arm}
@@ -181,9 +180,6 @@ if [ ! -e /etc/yum/vars/kvariant ];then
 echo "generic" > /etc/yum/vars/kvariant
 fi
 %endif
-
-%clean
-rm -rf %{buildroot}
 
 %files
 %defattr(0644,root,root,0755)
@@ -208,10 +204,10 @@ rm -rf %{buildroot}
 %{_datadir}/centos-release/*
 %{_prefix}/lib/os-release
 %{_prefix}/lib/systemd/system-preset/*
-%ifarch %{arm} aarch64
 %ifarch %{arm}
 %attr(0755,root,root) %{_bindir}/update-boot
 %endif
+%ifarch %{arm} aarch64
 %attr(0755,root,root) %{_bindir}/rootfs-expand
 %endif
 
@@ -221,6 +217,7 @@ rm -rf %{buildroot}
 - Create generic kvariant in aarch64 if it doesn't exist (for new kernel repos)
 - Own kvariant var in armhfp and aarch64
 - Backport move of /etc/os-release to /usr/lib/os-release (ngompa)
+- Spec file cleanup (carlwgeorge)
 
 * Mon Sep  2 2019 Pablo Greco <pgreco@centosproject.org>
 - Own yum vars
