@@ -41,8 +41,10 @@ Release:        %{centos_rel}.0%{?dist}
 Summary:        %{product_family} release file
 Group:          System Environment/Base
 License:        GPLv2
-%ifarch %{arm}
+%ifarch %{arm} aarch64
 Requires(post): coreutils
+%endif
+%ifarch ${arm}
 Requires:       extlinux-bootloader
 %endif
 Provides:       centos-release = %{version}-%{release}
@@ -173,6 +175,12 @@ if [ -e /usr/local/bin/rootfs-expand ];then
 rm -f /usr/local/bin/rootfs-expand
 fi
 %endif
+%ifarch aarch64
+%posttrans
+if [ ! -e /etc/yum/vars/kvariant ];then
+echo "generic" > /etc/yum/vars/kvariant
+fi
+%endif
 
 %clean
 rm -rf %{buildroot}
@@ -207,6 +215,7 @@ rm -rf %{buildroot}
 %changelog
 * Mon Apr  6 2020 Pablo Greco <pgreco@centosproject.org>
 - Add rootfs-expand to aarch64
+- Create generic kvariant in aarch64 if it doesn't exist (for new kernel repos)
 - Backport move of /etc/os-release to /usr/lib/os-release (ngompa)
 
 * Mon Sep  2 2019 Pablo Greco <pgreco@centosproject.org>
