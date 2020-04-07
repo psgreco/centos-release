@@ -198,6 +198,9 @@ rm -rf %{buildroot}
 /etc/pki/rpm-gpg/
 %config(noreplace) /etc/yum.repos.d/*
 %config(noreplace) /etc/yum/vars/*
+%ifarch %{arm} aarch64
+%ghost /etc/yum/vars/kvariant
+%endif
 /etc/rpm/macros.dist
 %{_docdir}/redhat-release
 %{_docdir}/centos-release/*
@@ -216,6 +219,7 @@ rm -rf %{buildroot}
 * Mon Apr  6 2020 Pablo Greco <pgreco@centosproject.org>
 - Add rootfs-expand to aarch64
 - Create generic kvariant in aarch64 if it doesn't exist (for new kernel repos)
+- Own kvariant var in armhfp and aarch64
 - Backport move of /etc/os-release to /usr/lib/os-release (ngompa)
 
 * Mon Sep  2 2019 Pablo Greco <pgreco@centosproject.org>
