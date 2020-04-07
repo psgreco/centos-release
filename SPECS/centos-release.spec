@@ -160,13 +160,12 @@ mkdir -p %{buildroot}%{_prefix}/lib/systemd/system-preset/
 install -m 0644 %{SOURCE1} %{buildroot}%{_prefix}/lib/systemd/system-preset/
 install -m 0644 %{SOURCE2} %{buildroot}%{_prefix}/lib/systemd/system-preset/
 
-%ifarch %{arm} aarch64
 # Install armhfp/aarch64 specific tools
-mkdir -p %{buildroot}/%{_bindir}/
 %ifarch %{arm}
-install -m 0755 %{SOURCE99} %{buildroot}%{_bindir}/
+install -D -m 0755 %{SOURCE99} %{buildroot}%{_bindir}/update-boot
 %endif
-install -m 0755 %{SOURCE100} %{buildroot}%{_bindir}/
+%ifarch aarch64
+install -D -m 0755 %{SOURCE100} %{buildroot}%{_bindir}/rootfs-expand
 %endif
 
 %ifarch %{arm}
@@ -208,10 +207,10 @@ rm -rf %{buildroot}
 %{_datadir}/centos-release/*
 %{_prefix}/lib/os-release
 %{_prefix}/lib/systemd/system-preset/*
-%ifarch %{arm} aarch64
 %ifarch %{arm}
 %attr(0755,root,root) %{_bindir}/update-boot
 %endif
+%ifarch aarch64
 %attr(0755,root,root) %{_bindir}/rootfs-expand
 %endif
 
