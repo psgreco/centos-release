@@ -25,9 +25,9 @@
 %define base_release_version 7
 %define full_release_version 7
 %define dist_release_version 7
-%define upstream_rel_long 7.7-10
-%define upstream_rel 7.7
-%define centos_rel 7.1908
+%define upstream_rel_long 7.8-2
+%define upstream_rel 7.8
+%define centos_rel 8.2003
 #define beta Beta
 %define dist .el%{dist_release_version}%{?altarch_suffix}.centos
 
@@ -218,6 +218,7 @@ fi
 - Own kvariant var in armhfp and aarch64
 - Backport move of /etc/os-release to /usr/lib/os-release (ngompa)
 - Spec file cleanup (carlwgeorge)
+- Update to 7.8
 
 * Mon Sep  2 2019 Pablo Greco <pgreco@centosproject.org>
 - Own yum vars
